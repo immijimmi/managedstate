@@ -1,8 +1,8 @@
 from copy import deepcopy
 from typing import Sequence, Any
 
-from .keyQuery import KeyQuery
-from .propertyName import PropertyName
+from .keyquery import KeyQuery
+from .propertyname import PropertyName
 
 
 class RecursiveNode:

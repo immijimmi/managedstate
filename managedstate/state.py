@@ -2,7 +2,7 @@ from objectextensions import Extendable
 
 from typing import Sequence, Any
 
-from .recursiveNode import RecursiveNode
+from .recursivenode import RecursiveNode
 
 
 class State(Extendable):
