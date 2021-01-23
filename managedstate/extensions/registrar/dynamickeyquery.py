@@ -1,0 +1,21 @@
+from typing import Callable, Any
+
+
+class DynamicKeyQuery:
+    """
+    Instances of this class can be provided as path keys only in Registrar.register().
+    When registered_get()/registered_set() is called with the relevant path label, the function provided below
+    will be called and passed one value from the custom query args list; a valid path key or KeyQuery should be returned
+    """
+
+    __hash__ = None
+    """
+    As this class is used indirectly to determine the method of access for the state object,
+    it will never be used as a direct index. Thus, it should never be set as a key.
+    """
+
+    def __init__(self, get_path_key: Callable[[Any], Any]):
+        self._function = get_path_key
+
+    def __call__(self, query_args: Any) -> Any:
+        return self._function(query_args)
