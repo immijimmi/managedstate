@@ -1,7 +1,7 @@
 class PropertyName:
     """
     An instance of this class should be provided as a path key when getting or setting the state,
-    to indicate that the next level of the state should be accessed via an object attribute
+    to indicate that the next nesting level of the state should be accessed via an object attribute
     """
 
     __hash__ = None
