@@ -3,9 +3,9 @@ from typing import Callable, Any
 
 class KeyQuery:
     """
-    An instance of this class should be provided as a path key when getting or setting the state,
+    Instances of this class can be provided as path keys when getting or setting the state,
     to indicate that the next nesting level of the state should be accessed via the index returned
-    from the stored query function.
+    from the stored function.
     The query function will receive a copy of the state object at the current level of nesting
     in order to determine what index to return
     """
@@ -16,8 +16,8 @@ class KeyQuery:
     it will never be used as a direct index. Thus, it should never be set as a key.
     """
 
-    def __init__(self, query_function: Callable[[Any], Any]):
-        self.__query = query_function
+    def __init__(self, get_path_key: Callable[[Any], Any]):
+        self._function = get_path_key
 
     def __call__(self, sub_state: Any) -> Any:
-        return self.__query(sub_state)
+        return self._function(sub_state)
