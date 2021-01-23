@@ -5,9 +5,9 @@ class KeyQuery:
     """
     Instances of this class can be provided as path keys when getting or setting the state,
     to indicate that the next nesting level of the state should be accessed via the index returned
-    from the stored function.
-    The query function will receive a copy of the state object at the current level of nesting
-    in order to determine what index to return
+    from the stored function below.
+    The function will receive a copy of the state object at the current level of nesting
+    in order to determine what key to return
     """
 
     __hash__ = None
