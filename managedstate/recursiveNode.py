@@ -1,11 +1,12 @@
 from copy import deepcopy
+from typing import Sequence, Any
 
 from .keyQuery import KeyQuery
 from .propertyName import PropertyName
 
 
 class RecursiveNode:
-    def __init__(self, value, path_keys=(), defaults=()):
+    def __init__(self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()):
         self.__value = try_copy(value)
         self.__path_keys = path_keys
         self.__defaults = defaults
@@ -17,13 +18,13 @@ class RecursiveNode:
         )
 
     @property
-    def value(self):
+    def value(self) -> Any:
         return self.__value
 
-    def get(self):
+    def get(self) -> Any:
         return self.__child.get() if self.__child else self.__value
 
-    def set(self, value):
+    def set(self, value: Any) -> None:
         if self.__child:
             self.__child.set(value)
             self.__update_value()
@@ -31,9 +32,7 @@ class RecursiveNode:
         else:
             self.__value = try_copy(value)
 
-        return self
-
-    def __get_working_key(self):
+    def __get_working_key(self) -> Any:
         working_key = self.__path_keys[0]
 
         if type(working_key) is KeyQuery:
@@ -41,7 +40,7 @@ class RecursiveNode:
 
         return try_copy(working_key)
 
-    def __get_child_value(self):
+    def __get_child_value(self) -> Any:
         try:
             working_key = self.__get_working_key()
 
@@ -59,7 +58,7 @@ class RecursiveNode:
 
         return child_value
 
-    def __update_value(self):
+    def __update_value(self) -> None:
         working_key = self.__get_working_key()
 
         if type(working_key) is PropertyName:
@@ -69,7 +68,7 @@ class RecursiveNode:
             self.__value[working_key] = self.__child.value
 
 
-def try_copy(item):
+def try_copy(item: Any) -> Any:
     """
     A failsafe deepcopy wrapper
     """
