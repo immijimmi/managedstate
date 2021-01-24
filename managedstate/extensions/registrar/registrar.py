@@ -14,34 +14,34 @@ class Registrar(Extension):
 
     @staticmethod
     def extend(target_cls):
-        Extension._wrap(target_cls, "__init__", Registrar._wrap_init)
+        Extension._wrap(target_cls, "__init__", Registrar.__wrap_init)
 
-        Extension._set(target_cls, "register", Registrar._register)
-        Extension._set(target_cls, "registered_get", Registrar._registered_get)
-        Extension._set(target_cls, "registered_set", Registrar._registered_set)
+        Extension._set(target_cls, "register", Registrar.__register)
+        Extension._set(target_cls, "registered_get", Registrar.__registered_get)
+        Extension._set(target_cls, "registered_set", Registrar.__registered_set)
 
-    def _wrap_init(self, *args, **kwargs):
+    def __wrap_init(self, *args, **kwargs):
         yield
-        Extension._set(self, "_paths", {})
+        Extension._set(self, "__paths", {})
 
-    def _register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
+    def __register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """
         Saves the provided path keys and defaults under the provided label, so that a custom get or set can be
         carried out at later times simply by providing the label again in a call to registered_get() or registered_set()
         """
 
         registered_path = {Keys.path_keys: path_keys, Keys.defaults: defaults}
-        self._paths[registered_path_label] = registered_path
+        self.__paths[registered_path_label] = registered_path
 
-    def _registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
+    def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
         """
         Calls get(), passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of DynamicPathKey, each will be called and passed one value from
         the custom query args list and is expected to return a valid path key
         """
 
-        registered_path = self._paths[registered_path_label]
-        path_keys = Registrar._process_registered_path_keys(
+        registered_path = self.__paths[registered_path_label]
+        path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.path_keys], custom_query_args
         )
         defaults = registered_path[Keys.defaults]
@@ -56,15 +56,15 @@ class Registrar(Extension):
 
         return result
 
-    def _registered_set(self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> None:
+    def __registered_set(self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> None:
         """
         Calls set(), passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of DynamicPathKey, each will be called and passed one value from
         the custom query args list and is expected to return a valid path key
         """
 
-        registered_path = self._paths[registered_path_label]
-        path_keys = Registrar._process_registered_path_keys(
+        registered_path = self.__paths[registered_path_label]
+        path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.path_keys], custom_query_args
         )
         defaults = registered_path[Keys.defaults]
@@ -78,7 +78,7 @@ class Registrar(Extension):
         del self._extension_data[Keys.custom_query_args]
 
     @staticmethod
-    def _process_registered_path_keys(path_keys: Sequence[Any], custom_query_args: Sequence[Any]) -> List[Any]:
+    def __process_registered_path_keys(path_keys: Sequence[Any], custom_query_args: Sequence[Any]) -> List[Any]:
         """
         Used internally to coalesce instances of DynamicKeyQuery before path keys are passed to set()/get()
         """

@@ -17,7 +17,7 @@ class KeyQuery:
     """
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
-        self._function = path_key_getter
+        self.__function = path_key_getter
 
     def __call__(self, sub_state: Any) -> Any:
-        return self._function(sub_state)
+        return self.__function(sub_state)

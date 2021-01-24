@@ -15,7 +15,7 @@ class DynamicKeyQuery:
     """
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
-        self._function = path_key_getter
+        self.__function = path_key_getter
 
     def __call__(self, query_args: Any) -> Any:
-        return self._function(query_args)
+        return self.__function(query_args)

@@ -22,7 +22,7 @@ class State(Extendable):
         Returns a copy of the drilled-down state object
         """
 
-        return try_copy(self._get_working_state(path_keys, defaults))
+        return try_copy(self.__get_working_state(path_keys, defaults))
 
     def set(self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> None:
         """
@@ -40,7 +40,7 @@ class State(Extendable):
             return
 
         path_keys, set_key = path_keys[:-1], path_keys[-1]
-        working_state = self._get_working_state(path_keys, defaults)
+        working_state = self.__get_working_state(path_keys, defaults)
 
         if issubclass(type(set_key), KeyQuery):
             set_key = set_key(try_copy(working_state))
@@ -51,7 +51,7 @@ class State(Extendable):
         else:  # Assume set key is a container index if not an attribute name
             working_state[set_key] = value
 
-    def _get_working_state(self, path_keys, defaults):
+    def __get_working_state(self, path_keys, defaults):
         """
         Used internally to drill into the state object when a get or set operation is carried out
         """
