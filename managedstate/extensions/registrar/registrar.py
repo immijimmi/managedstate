@@ -14,23 +14,15 @@ class Registrar(Extension):
 
     @staticmethod
     def extend(target_cls):
-        Extension.wrap(target_cls, "__init__", Registrar._wrap_init)
+        Extension._wrap(target_cls, "__init__", Registrar._wrap_init)
 
-        for attribute_name in ("register", "registered_get", "registered_set"):
-            if hasattr(target_cls, attribute_name):
-                raise ValueError("Duplicate attribute .{0} was detected".format(attribute_name))
-
-        target_cls.register = Registrar._register
-        target_cls.registered_get = Registrar._registered_get
-        target_cls.registered_set = Registrar._registered_set
+        Extension._set(target_cls, "register", Registrar._register)
+        Extension._set(target_cls, "registered_get", Registrar._registered_get)
+        Extension._set(target_cls, "registered_set", Registrar._registered_set)
 
     def _wrap_init(self, *args, **kwargs):
         yield
-
-        if hasattr(self, "_paths"):
-            raise ValueError("Duplicate attribute ._paths was detected")
-
-        self._paths = {}
+        Extension._set(self, "_paths", {})
 
     def _register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """
