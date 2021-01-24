@@ -16,8 +16,8 @@ class KeyQuery:
     it will never be used as a direct index. Thus, it should never be set as a key.
     """
 
-    def __init__(self, get_path_key: Callable[[Any], Any]):
-        self._function = get_path_key
+    def __init__(self, path_key_getter: Callable[[Any], Any]):
+        self._function = path_key_getter
 
     def __call__(self, sub_state: Any) -> Any:
         return self._function(sub_state)
