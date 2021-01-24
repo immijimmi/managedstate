@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import Sequence, Any
 
 from .keyquery import KeyQuery
-from .propertyname import PropertyName
+from .attributename import AttributeName
 
 
 class RecursiveNode:
@@ -46,7 +46,7 @@ class RecursiveNode:
 
             child_value = (
                 getattr(self.__value, working_key.name)
-                if type(working_key) is PropertyName
+                if type(working_key) is AttributeName
                 else self.__value[working_key]
             )
 
@@ -61,7 +61,7 @@ class RecursiveNode:
     def __update_value(self) -> None:
         working_key = self.__get_working_key()
 
-        if type(working_key) is PropertyName:
+        if type(working_key) is AttributeName:
             setattr(self.__value, working_key.name, self.__child.value)
 
         else:
