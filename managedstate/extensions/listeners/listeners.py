@@ -23,7 +23,7 @@ class Listeners(Extension):
 
     def __wrap_init(self, *args, **kwargs):
         yield
-        Extension._set(self, "__listeners", {
+        Extension._set(self, "_listeners", {
             Keys.method_get: set(),
             Keys.method_set: set()
         })
@@ -37,7 +37,7 @@ class Listeners(Extension):
         if method not in [Keys.method_get, Keys.method_set]:
             ErrorMessages.invalid_method(method)
 
-        self.__listeners[method].add(listener)
+        self._listeners[method].add(listener)
 
     def __remove_listener(self, method: str, listener: Callable[[dict], None]) -> None:
         """
@@ -47,8 +47,8 @@ class Listeners(Extension):
         if method not in [Keys.method_get, Keys.method_set]:
             ErrorMessages.invalid_method(method)
 
-        if listener in self.__listeners[method]:
-            self.__listeners[method].remove(listener)
+        if listener in self._listeners[method]:
+            self._listeners[method].remove(listener)
 
     @staticmethod
     def __get_listeners_caller(method: str) -> Callable[[State, Any, Any], Generator[None, Any, None]]:

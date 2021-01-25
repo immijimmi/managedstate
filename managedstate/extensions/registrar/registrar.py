@@ -22,7 +22,7 @@ class Registrar(Extension):
 
     def __wrap_init(self, *args, **kwargs):
         yield
-        Extension._set(self, "__paths", {})
+        Extension._set(self, "_paths", {})
 
     def __register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """
@@ -31,7 +31,7 @@ class Registrar(Extension):
         """
 
         registered_path = {Keys.path_keys: path_keys, Keys.defaults: defaults}
-        self.__paths[registered_path_label] = registered_path
+        self._paths[registered_path_label] = registered_path
 
     def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
         """
@@ -40,7 +40,7 @@ class Registrar(Extension):
         the custom query args list and is expected to return a valid path key
         """
 
-        registered_path = self.__paths[registered_path_label]
+        registered_path = self._paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.path_keys], custom_query_args
         )
@@ -63,7 +63,7 @@ class Registrar(Extension):
         the custom query args list and is expected to return a valid path key
         """
 
-        registered_path = self.__paths[registered_path_label]
+        registered_path = self._paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.path_keys], custom_query_args
         )
