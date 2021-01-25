@@ -6,6 +6,7 @@ def res():
     class StateResources:
         value = {"key_1": 4}
         value_2 = {"key_1": [{}, {"key_2": 5}, {}]}
+        value_3 = {"key_1": {"key_2": [], "key_3": {"key_4": 8}}}
 
     return StateResources
 

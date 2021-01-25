@@ -22,7 +22,10 @@ class State(Extendable):
         Returns a copy of the drilled-down state object
         """
 
-        return try_copy(self.__get_working_state(path_keys, defaults))
+        path_keys = list(try_copy(path_keys))
+        defaults = list(try_copy(defaults))
+
+        return try_copy(self.__get_nodes(path_keys, defaults)[-1])
 
     def set(self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> None:
         """
@@ -34,29 +37,35 @@ class State(Extendable):
         """
 
         value = try_copy(value)
+        path_keys = list(try_copy(path_keys))
+        defaults = list(try_copy(defaults))
 
-        if not path_keys:
-            self.__state = value
-            return
+        nodes = self.__get_nodes(path_keys[:-1], defaults)
 
-        path_keys, set_key = path_keys[:-1], path_keys[-1]
-        working_state = self.__get_working_state(path_keys, defaults)
+        while path_keys:
+            working_state = nodes.pop()
+            set_key = path_keys.pop()
 
-        if issubclass(type(set_key), KeyQuery):
-            set_key = set_key(try_copy(working_state))
+            if issubclass(type(set_key), KeyQuery):
+                set_key = set_key(try_copy(working_state))
 
-        if issubclass(type(set_key), AttributeName):
-            setattr(working_state, set_key.name, value)
+            if issubclass(type(set_key), AttributeName):
+                setattr(working_state, set_key.name, value)
 
-        else:  # Assume set key is a container index if not an attribute name
-            working_state[set_key] = value
+            else:  # Assume set key is a container index if not an attribute name
+                working_state[set_key] = value
 
-    def __get_working_state(self, path_keys, defaults):
+            value = working_state
+
+        self.__state = value
+
+    def __get_nodes(self, path_keys, defaults):
         """
         Used internally to drill into the state object when a get or set operation is carried out
         """
 
         working_state = self.__state
+        nodes = [working_state]
         for path_index, path_key in enumerate(path_keys):
             if issubclass(type(path_key), KeyQuery):  # Resolve any KeyQuery instances first
                 path_key = path_key(try_copy(working_state))
@@ -79,7 +88,9 @@ class State(Extendable):
                     except IndexError:
                         ErrorMessages.no_default(path_index)
 
-        return working_state
+            nodes.append(working_state)
+
+        return nodes
 
 
 def try_copy(item: Any) -> Any:
