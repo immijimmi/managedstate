@@ -3,15 +3,6 @@ import pytest
 from managedstate import State
 
 
-@pytest.fixture
-def res():
-    class StateResources:
-        value = {"key_1": 4}
-        value_2 = {"key_1": [{}, {"key_2": 5}, {}]}
-
-    return StateResources
-
-
 class TestState:
     def test_state_is_correctly_set(self, res):
         state = State()
