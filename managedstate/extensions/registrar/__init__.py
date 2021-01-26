@@ -1,2 +1,2 @@
 from .registrar import Registrar
-from .dynamickeyquery import DynamicKeyQuery
+from .partialquery import PartialQuery

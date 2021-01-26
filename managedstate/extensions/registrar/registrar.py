@@ -4,7 +4,7 @@ from typing import Sequence, List, Any
 
 from ...state import State
 from .constants import Keys
-from .dynamickeyquery import DynamicKeyQuery
+from .partialquery import PartialQuery
 
 
 class Registrar(Extension):
@@ -36,8 +36,8 @@ class Registrar(Extension):
     def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
         """
         Calls get(), passing in the path keys and defaults previously provided in register().
-        If any of these path keys are instances of DynamicPathKey, each will be called and passed one value from
-        the custom query args list and is expected to return a valid path key
+        If any of these path keys are instances of PartialQuery, each will be called and passed one value from
+        the custom query args list and is expected to return a valid path key or KeyQuery
         """
 
         registered_path = self._paths[registered_path_label]
@@ -59,8 +59,8 @@ class Registrar(Extension):
     def __registered_set(self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> None:
         """
         Calls set(), passing in the path keys and defaults previously provided in register().
-        If any of these path keys are instances of DynamicPathKey, each will be called and passed one value from
-        the custom query args list and is expected to return a valid path key
+        If any of these path keys are instances of PartialQuery, each will be called and passed one value from
+        the custom query args list and is expected to return a valid path key or KeyQuery
         """
 
         registered_path = self._paths[registered_path_label]
@@ -80,14 +80,14 @@ class Registrar(Extension):
     @staticmethod
     def __process_registered_path_keys(path_keys: Sequence[Any], custom_query_args: Sequence[Any]) -> List[Any]:
         """
-        Used internally to coalesce instances of DynamicKeyQuery before path keys are passed to set()/get()
+        Used internally to coalesce instances of PartialQuery before path keys are passed to set()/get()
         """
 
         working_args = list(custom_query_args)
         result = []
 
         for path_node in path_keys:
-            if type(path_node) is DynamicKeyQuery:
+            if type(path_node) is PartialQuery:
                 result.append(path_node(working_args.pop(0)))
             else:
                 result.append(path_node)

@@ -1,2 +1,2 @@
 from .listeners import Listeners
-from .registrar import Registrar, DynamicKeyQuery
+from .registrar import Registrar, PartialQuery
