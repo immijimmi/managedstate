@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Callable, Any, Tuple
 
 
 class KeyQuery:
@@ -18,6 +18,17 @@ class KeyQuery:
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
         self.__function = path_key_getter
+        self.__history = []
 
     def __call__(self, sub_state: Any) -> Any:
+        result = self.__function(sub_state)
+        self.__history.append(result)
+
         return self.__function(sub_state)
+
+    @property
+    def history(self) -> Tuple[Any]:
+        return tuple(self.__history)
+
+    def clear(self):
+        self.__history.clear()

@@ -47,7 +47,13 @@ class State(Extendable):
             set_key = path_keys.pop()
 
             if issubclass(type(set_key), KeyQuery):
-                set_key = set_key(try_copy(working_state))
+                key_query = set_key
+                if key_query.history:
+                    set_key = key_query.history[-1]  # If KeyQuery was already resolved in __get_nodes()
+                else:
+                    set_key = key_query(try_copy(working_state))
+
+                key_query.clear()
 
             if issubclass(type(set_key), AttributeName):
                 setattr(working_state, set_key.name, value)
