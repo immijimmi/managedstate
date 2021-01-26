@@ -9,9 +9,9 @@ class TestState:
 
         assert state.get() == {}
 
-        state = State(res.value)
+        state = State(res.value_1)
 
-        assert state.get() == res.value
+        assert state.get() == res.value_1
 
         state = State()
         state.set(res.value_2)
