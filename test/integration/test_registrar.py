@@ -7,7 +7,6 @@ class TestRegistrar:
         state = State.with_extensions(Registrar)(res.value_2)
 
         state.register("test_label", ["key_1", 1, "key_2"])
-
         state.registered_set("value", "test_label")
 
         assert state.get() == {"key_1": [{}, {"key_2": "value"}, {}]}
@@ -30,7 +29,14 @@ class TestRegistrar:
         state = State.with_extensions(Registrar)(res.value_3)
 
         state.register("test_label", ["key_1", "nonexistent_key", "key_4"], [{}, {}, 0])
-
         state.registered_set("value", "test_label")
 
         assert state.get() == {"key_1": {"key_2": [], "key_3": {"key_4": 8}, "nonexistent_key": {"key_4": "value"}}}
+
+    def test_registered_set_no_pathkeys(self, res):
+        state = State.with_extensions(Registrar)(res.value_1)
+
+        state.register("test_label", [])
+        state.registered_set(8, "test_label")
+
+        assert state.get() == 8
