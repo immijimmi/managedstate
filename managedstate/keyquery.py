@@ -20,11 +20,11 @@ class KeyQuery:
         self.__function = path_key_getter
         self.__history = []
 
-    def __call__(self, sub_state: Any) -> Any:
-        result = self.__function(sub_state)
+    def __call__(self, substate: Any) -> Any:
+        result = self.__function(substate)
         self.__history.append(result)
 
-        return self.__function(sub_state)
+        return self.__function(substate)
 
     @property
     def history(self) -> Tuple[Any]:
