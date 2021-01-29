@@ -17,7 +17,7 @@ setup(
     author="immijimmi",
     author_email="imranhamid99@msn.com",
     url="https://github.com/immijimmi/managedstate",
-    download_url="",
+    download_url="https://github.com/immijimmi/managedstate/archive/v0.1.0.tar.gz",
     keywords=[
         "state", "managed", "management", "access", "data"
     ],
