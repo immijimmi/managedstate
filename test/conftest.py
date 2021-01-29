@@ -23,10 +23,10 @@ def listeners_obj():
         def __init__(self):
             self.list = []
 
-        def add_get_path_keys_to_list(self, state_obj, path_keys=(), defaults=()):
-            self.list.append(path_keys)
+        def add_get_path_keys_to_list(self, result, state_obj, pathkeys=(), defaults=()):
+            self.list.append(pathkeys)
 
-        def add_set_value_to_list(self, state_obj, value, path_keys=(), defaults=()):
+        def add_set_value_to_list(self, result, state_obj, value, pathkeys=(), defaults=()):
             self.list.append(value)
 
     return ExampleListenersClass()

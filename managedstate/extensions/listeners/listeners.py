@@ -31,7 +31,7 @@ class Listeners(Extension):
     def __add_listener(self, method: str, listener: Callable[[dict], None]) -> None:
         """
         Adds the provided listener to a set of callbacks for the specified method.
-        These callbacks will receive a dict containing copies of the method arguments and its return value
+        These callbacks will receive copies of the method return value and its arguments
         """
 
         if method not in [Keys.method_get, Keys.method_set]:
@@ -41,7 +41,7 @@ class Listeners(Extension):
 
     def __remove_listener(self, method: str, listener: Callable[[dict], None]) -> None:
         """
-        Removes the provided listener from the set of callbacks for the specified method.
+        Removes the provided listener from the set of callbacks for the specified method
         """
 
         if method not in [Keys.method_get, Keys.method_set]:
@@ -60,6 +60,6 @@ class Listeners(Extension):
             result = yield
 
             for listener in self._listeners[method]:
-                listener(self, *args, **kwargs)
+                listener(result, self, *args, **kwargs)
 
         return call_listeners
