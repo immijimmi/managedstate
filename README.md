@@ -118,7 +118,8 @@ state = State.with_extensions(Registrar)()
 *extensions*.**PartialQuery**(*self, path_key_getter: Callable[[Any], Any]*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Instances of this class can be provided as path keys only in `Registrar.register()`.  
 &nbsp;&nbsp;&nbsp;&nbsp;When `registered_get()`/`registered_set()` is called with the relevant path label, the function provided below  
-&nbsp;&nbsp;&nbsp;&nbsp;will be called and passed one value from the custom query args list; a valid path key or KeyQuery should be returned.  
+&nbsp;&nbsp;&nbsp;&nbsp;will be called and passed one value from the custom query args list;  
+&nbsp;&nbsp;&nbsp;&nbsp;a valid path key or KeyQuery should be returned.  
 &nbsp;
 
 ### Methods

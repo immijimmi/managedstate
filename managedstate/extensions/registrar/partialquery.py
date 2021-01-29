@@ -5,7 +5,8 @@ class PartialQuery:
     """
     Instances of this class can be provided as path keys only in Registrar.register().
     When registered_get()/registered_set() is called with the relevant path label, the function provided below
-    will be called and passed one value from the custom query args list; a valid path key or KeyQuery should be returned
+    will be called and passed one value from the custom query args list;
+    a valid path key or KeyQuery should be returned
     """
 
     __hash__ = None
