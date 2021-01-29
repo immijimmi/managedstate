@@ -92,11 +92,11 @@ state = State.with_extensions(Registrar)()
 
 ### Extensions
 
-**Registrar**  
+*extensions*.**Registrar**  
 &nbsp;&nbsp;&nbsp;&nbsp;Allows specific get and set operations to be registered under a shorthand label for ease of use later.  
 &nbsp;
 
-**Listeners**  
+*extensions*.**Listeners**  
 &nbsp;&nbsp;&nbsp;&nbsp;Provides an easy way to attach observer methods that will be called immediately after `set()` and/or `get()`.  
 &nbsp;
 
@@ -113,6 +113,56 @@ state = State.with_extensions(Registrar)()
 &nbsp;&nbsp;&nbsp;&nbsp;from its stored function.  
 &nbsp;&nbsp;&nbsp;&nbsp;The function will receive a copy of the state object at the current level of nesting  
 &nbsp;&nbsp;&nbsp;&nbsp;in order to determine what key to return.  
+&nbsp;
+
+*extensions*.**PartialQuery**(*self, path_key_getter: Callable[[Any], Any]*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Instances of this class can be provided as path keys only in `Registrar.register()`.  
+&nbsp;&nbsp;&nbsp;&nbsp;When `registered_get()`/`registered_set()` is called with the relevant path label, the function provided below  
+&nbsp;&nbsp;&nbsp;&nbsp;will be called and passed one value from the custom query args list; a valid path key or KeyQuery should be returned.  
+&nbsp;
+
+### Methods
+
+State.**get**(*self, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
+&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
+&nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
+&nbsp;&nbsp;&nbsp;&nbsp;Returns a copy of the drilled-down state object.  
+&nbsp;
+
+State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
+&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
+&nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
+&nbsp;&nbsp;&nbsp;&nbsp;The final path key is used as the index to store a copy of the provided value at  
+&nbsp;&nbsp;&nbsp;&nbsp;inside the drilled-down state object.  
+&nbsp;
+
+*extensions*.Registrar.**register**(*self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Saves the provided path keys and defaults under the provided label, so that a custom get or set can be  
+&nbsp;&nbsp;&nbsp;&nbsp;carried out at later times simply by providing the label again in a call to `registered_get()` or `registered_set()`.  
+&nbsp;
+
+*extensions*.Registrar.**registered_get**(*self, registered_path_label: str, custom_query_args: Sequence[Any] = ()*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Calls `get()`, passing in the path keys and defaults previously provided in `register()`.  
+&nbsp;&nbsp;&nbsp;&nbsp;If any of these path keys are instances of PartialQuery, each will be called and passed one value from  
+&nbsp;&nbsp;&nbsp;&nbsp;the custom query args list and is expected to return a valid path key or KeyQuery.  
+&nbsp;
+
+*extensions*.Registrar.**registered_set**(*self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Calls `set()`, passing in the path keys and defaults previously provided in `register()`.  
+&nbsp;&nbsp;&nbsp;&nbsp;If any of these path keys are instances of PartialQuery, each will be called and passed one value from  
+&nbsp;&nbsp;&nbsp;&nbsp;the custom query args list and is expected to return a valid path key or KeyQuery.  
+&nbsp;
+
+*extensions*.Listeners.**add_listener**(*self, method: str, listener: Callable[[dict], None]*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Adds the provided listener to a set of callbacks for the specified method.  
+&nbsp;&nbsp;&nbsp;&nbsp;These callbacks will receive copies of the method return value and its arguments  
+&nbsp;&nbsp;&nbsp;&nbsp;in the form `(result, self, *args, **kwargs)`.  
+&nbsp;
+
+*extensions*.Listeners.**remove_listener**(*self, method: str, listener: Callable[[dict], None]*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Removes the provided listener from the set of callbacks for the specified method.  
 &nbsp;
 
 ### Additional Info
