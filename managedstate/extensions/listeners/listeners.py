@@ -7,6 +7,10 @@ from .constants import Keys, ErrorMessages
 
 
 class Listeners(Extension):
+    """
+    Provides an easy way to attach observer methods that will be called immediately after set() and/or get()
+    """
+
     @staticmethod
     def can_extend(target_cls):
         return issubclass(target_cls, State)

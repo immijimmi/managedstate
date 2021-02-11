@@ -8,6 +8,10 @@ from .partialquery import PartialQuery
 
 
 class Registrar(Extension):
+    """
+    Allows specific get and set operations to be registered under a shorthand label for ease of use later
+    """
+
     @staticmethod
     def can_extend(target_cls):
         return issubclass(target_cls, State)
