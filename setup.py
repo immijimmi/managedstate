@@ -9,7 +9,7 @@ setup(
         "managedstate", "managedstate.extensions",
         "managedstate.extensions.listeners", "managedstate.extensions.registrar"
     ],
-    version="0.1.1",
+    version="0.1.2",
     license="MIT",
     description="State management inspired by Redux",
     long_description_content_type="text/markdown",
@@ -17,7 +17,7 @@ setup(
     author="immijimmi",
     author_email="imranhamid99@msn.com",
     url="https://github.com/immijimmi/managedstate",
-    download_url="https://github.com/immijimmi/managedstate/archive/v0.1.1.tar.gz",
+    download_url="https://github.com/immijimmi/managedstate/archive/refs/tags/v0.1.2.tar.gz",
     keywords=[
         "state", "managed", "management", "access", "data"
     ],
