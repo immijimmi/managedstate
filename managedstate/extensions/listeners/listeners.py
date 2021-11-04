@@ -22,14 +22,14 @@ class Listeners(Extension):
         Extension._set(target_cls, "add_listener", Listeners.__add_listener)
         Extension._set(target_cls, "remove_listener", Listeners.__remove_listener)
 
-        Extension._wrap(target_cls, Keys.method_get, Listeners.__get_listeners_caller(Keys.method_get))
-        Extension._wrap(target_cls, Keys.method_set, Listeners.__get_listeners_caller(Keys.method_set))
+        Extension._wrap(target_cls, Keys.METHOD_GET, Listeners.__get_listeners_caller(Keys.METHOD_GET))
+        Extension._wrap(target_cls, Keys.METHOD_SET, Listeners.__get_listeners_caller(Keys.METHOD_SET))
 
     def __wrap_init(self, *args, **kwargs):
         yield
         Extension._set(self, "_listeners", {
-            Keys.method_get: set(),
-            Keys.method_set: set()
+            Keys.METHOD_GET: set(),
+            Keys.METHOD_SET: set()
         })
 
     def __add_listener(self, method: str, listener: Callable[[dict], None]) -> None:
@@ -39,7 +39,7 @@ class Listeners(Extension):
         in the form (result, self, *args, **kwargs)
         """
 
-        if method not in [Keys.method_get, Keys.method_set]:
+        if method not in [Keys.METHOD_GET, Keys.METHOD_SET]:
             ErrorMessages.invalid_method(method)
 
         self._listeners[method].add(listener)
@@ -49,7 +49,7 @@ class Listeners(Extension):
         Removes the provided listener from the set of callbacks for the specified method
         """
 
-        if method not in [Keys.method_get, Keys.method_set]:
+        if method not in [Keys.METHOD_GET, Keys.METHOD_SET]:
             ErrorMessages.invalid_method(method)
 
         if listener in self._listeners[method]:

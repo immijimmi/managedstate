@@ -1,8 +1,8 @@
 class Keys:
-    method_get = "get"
-    method_set = "set"
+    METHOD_GET = "get"
+    METHOD_SET = "set"
 
-    new_state = "new_state"
+    NEW_STATE = "new_state"
 
 
 class ErrorMessages:

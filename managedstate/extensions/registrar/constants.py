@@ -10,8 +10,8 @@ class PartialQueries:
 
 
 class Keys:
-    registered_path_label = "registered_path_label"
-    custom_query_args = "custom_query_args"
+    REGISTERED_PATH_LABEL = "registered_path_label"
+    CUSTOM_QUERY_ARGS = "custom_query_args"
 
-    path_keys = "path_keys"
-    defaults = "defaults"
+    PATH_KEYS = "path_keys"
+    DEFAULTS = "defaults"

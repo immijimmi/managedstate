@@ -34,7 +34,7 @@ class Registrar(Extension):
         carried out at later times simply by providing the label again in a call to registered_get() or registered_set()
         """
 
-        registered_path = {Keys.path_keys: path_keys, Keys.defaults: defaults}
+        registered_path = {Keys.PATH_KEYS: path_keys, Keys.DEFAULTS: defaults}
         self._paths[registered_path_label] = registered_path
 
     def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
@@ -46,17 +46,17 @@ class Registrar(Extension):
 
         registered_path = self._paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
-            registered_path[Keys.path_keys], custom_query_args
+            registered_path[Keys.PATH_KEYS], custom_query_args
         )
-        defaults = registered_path[Keys.defaults]
+        defaults = registered_path[Keys.DEFAULTS]
 
-        self._extension_data[Keys.registered_path_label] = registered_path_label
-        self._extension_data[Keys.custom_query_args] = custom_query_args
+        self._extension_data[Keys.REGISTERED_PATH_LABEL] = registered_path_label
+        self._extension_data[Keys.CUSTOM_QUERY_ARGS] = custom_query_args
 
         result = self.get(path_keys, defaults)
 
-        del self._extension_data[Keys.registered_path_label]
-        del self._extension_data[Keys.custom_query_args]
+        del self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
 
         return result
 
@@ -69,17 +69,17 @@ class Registrar(Extension):
 
         registered_path = self._paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
-            registered_path[Keys.path_keys], custom_query_args
+            registered_path[Keys.PATH_KEYS], custom_query_args
         )
-        defaults = registered_path[Keys.defaults]
+        defaults = registered_path[Keys.DEFAULTS]
 
-        self._extension_data[Keys.registered_path_label] = registered_path_label
-        self._extension_data[Keys.custom_query_args] = custom_query_args
+        self._extension_data[Keys.REGISTERED_PATH_LABEL] = registered_path_label
+        self._extension_data[Keys.CUSTOM_QUERY_ARGS] = custom_query_args
 
         result = self.set(value, path_keys, defaults)
 
-        del self._extension_data[Keys.registered_path_label]
-        del self._extension_data[Keys.custom_query_args]
+        del self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
 
     @staticmethod
     def __process_registered_path_keys(path_keys: Sequence[Any], custom_query_args: Sequence[Any]) -> List[Any]:
