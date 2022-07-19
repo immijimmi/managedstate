@@ -56,7 +56,7 @@ class Listeners(Extension):
             self._listeners[method].remove(listener)
 
     @staticmethod
-    def __get_listeners_caller(method: str) -> Callable[[State, Any, Any], Generator[None, Any, None]]:
+    def __get_listeners_caller(method: str) -> Callable[..., Generator[None, Any, None]]:
         """
         Used internally as a generic way to get listener handlers that can wrap each relevant method
         """
