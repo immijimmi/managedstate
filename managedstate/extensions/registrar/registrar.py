@@ -22,7 +22,7 @@ class Registrar(Extension):
         Extension._wrap(target_cls, "__init__", Registrar.__wrap_init)
 
         Extension._set_property(target_cls, "registered_paths", Registrar.__registered_paths)
-        Extension._set(target_cls, "register", Registrar.__register)
+        Extension._set(target_cls, "register_path", Registrar.__register_path)
         Extension._set(target_cls, "registered_get", Registrar.__registered_get)
         Extension._set(target_cls, "registered_set", Registrar.__registered_set)
 
@@ -37,7 +37,7 @@ class Registrar(Extension):
 
         return StateMethods.try_copy(self._registered_paths)
 
-    def __register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
+    def __register_path(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """
         Saves the provided path keys and defaults under the provided label, so that a custom get or set can be
         carried out at later times simply by providing the label again in a call to registered_get() or registered_set()

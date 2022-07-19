@@ -10,7 +10,7 @@ class TestPartialQuery:
 
         query = PartialQuery(lambda args: 0)
 
-        state.register("label", ["key_1", query])
+        state.register_path("label", ["key_1", query])
 
         assert pytest.raises(IndexError, state.registered_get, "label")
         assert pytest.raises(IndexError, state.registered_set, "value", "label")
@@ -20,7 +20,7 @@ class TestPartialQuery:
 
         query = PartialQuery(lambda args: KeyQuery(lambda substate: args))
 
-        state.register("label", ["key_1", query, "key_2"])
+        state.register_path("label", ["key_1", query, "key_2"])
 
         assert state.registered_get("label", (1,)) == 5
 
@@ -29,7 +29,7 @@ class TestPartialQuery:
 
         query = PartialQuery(lambda args: KeyQuery(lambda substate: "key"+args))
 
-        state.register("label", ["key_1", 0, query])
+        state.register_path("label", ["key_1", 0, query])
         state.registered_set("value", "label", ("_2",))
 
         assert state.get(["key_1", 0, "key_2"]) == "value"

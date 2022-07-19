@@ -116,7 +116,7 @@ state = State.with_extensions(Registrar)()
 &nbsp;
 
 *extensions*.**PartialQuery**(*self, path_key_getter: Callable[[Any], Any]*)  
-&nbsp;&nbsp;&nbsp;&nbsp;Instances of this class can be provided as path keys only in `Registrar.register()`.  
+&nbsp;&nbsp;&nbsp;&nbsp;Instances of this class can be provided as path keys only in `Registrar.register_path()`.  
 &nbsp;&nbsp;&nbsp;&nbsp;When `registered_get()`/`registered_set()` is called with the relevant path label, the function provided below  
 &nbsp;&nbsp;&nbsp;&nbsp;will be called and passed one value from the custom query args list;  
 &nbsp;&nbsp;&nbsp;&nbsp;a valid path key or KeyQuery should be returned.  
@@ -139,7 +139,7 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 &nbsp;&nbsp;&nbsp;&nbsp;inside the drilled-down state object.  
 &nbsp;
 
-*extensions*.Registrar.**register**(*self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()*)  
+*extensions*.Registrar.**register_path**(*self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Saves the provided path keys and defaults under the provided label, so that a custom get or set can be  
 &nbsp;&nbsp;&nbsp;&nbsp;carried out at later times simply by providing the label again in a call to `registered_get()` or `registered_set()`.  
 &nbsp;
