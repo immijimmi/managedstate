@@ -1,18 +1,18 @@
 from objectextensions import Extendable
 
 from typing import Sequence, Any
-from copy import deepcopy
 
 from .keyquery import KeyQuery
 from .attributename import AttributeName
 from .constants import ErrorMessages
+from .methods import Methods
 
 
 class State(Extendable):
     def __init__(self, initial_state: Any = None):
         super().__init__()
 
-        self.__state = try_copy(initial_state) or {}
+        self.__state = Methods.try_copy(initial_state) or {}
 
     def get(self, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> Any:
         """
@@ -22,10 +22,10 @@ class State(Extendable):
         Returns a copy of the drilled-down state object
         """
 
-        path_keys = list(try_copy(path_keys))
-        defaults = list(try_copy(defaults))
+        path_keys = list(Methods.try_copy(path_keys))
+        defaults = list(Methods.try_copy(defaults))
 
-        return try_copy(self.__get_nodes(path_keys, defaults)[-1])
+        return Methods.try_copy(self.__get_nodes(path_keys, defaults)[-1])
 
     def set(self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> None:
         """
@@ -36,9 +36,9 @@ class State(Extendable):
         inside the drilled-down state object
         """
 
-        value = try_copy(value)
-        path_keys = list(try_copy(path_keys))
-        defaults = list(try_copy(defaults))
+        value = Methods.try_copy(value)
+        path_keys = list(Methods.try_copy(path_keys))
+        defaults = list(Methods.try_copy(defaults))
 
         nodes = self.__get_nodes(path_keys[:-1], defaults)
 
@@ -51,7 +51,7 @@ class State(Extendable):
                 if key_query.history:
                     set_key = key_query.history[-1]  # If KeyQuery was already resolved in __get_nodes()
                 else:
-                    set_key = key_query(try_copy(working_state))
+                    set_key = key_query(Methods.try_copy(working_state))
 
                 key_query.clear()
 
@@ -74,7 +74,7 @@ class State(Extendable):
         nodes = [working_state]
         for path_index, path_key in enumerate(path_keys):
             if issubclass(type(path_key), KeyQuery):  # Resolve any KeyQuery instances first
-                path_key = path_key(try_copy(working_state))
+                path_key = path_key(Methods.try_copy(working_state))
 
             if issubclass(type(path_key), AttributeName):
                 try:
@@ -97,15 +97,3 @@ class State(Extendable):
             nodes.append(working_state)
 
         return nodes
-
-
-def try_copy(item: Any) -> Any:
-    """
-    A failsafe deepcopy wrapper
-    """
-
-    try:
-        return deepcopy(item)
-
-    except:
-        return item
