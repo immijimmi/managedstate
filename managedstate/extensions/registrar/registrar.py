@@ -1,8 +1,9 @@
 from objectextensions import Extension
 
-from typing import Sequence, List, Any
+from typing import Sequence, List, Any, Dict
 
 from ...state import State
+from ...methods import Methods as StateMethods
 from .constants import Keys
 from .partialquery import PartialQuery
 
@@ -20,13 +21,21 @@ class Registrar(Extension):
     def extend(target_cls):
         Extension._wrap(target_cls, "__init__", Registrar.__wrap_init)
 
+        Extension._set_property(target_cls, "registered_paths", Registrar.__registered_paths)
         Extension._set(target_cls, "register", Registrar.__register)
         Extension._set(target_cls, "registered_get", Registrar.__registered_get)
         Extension._set(target_cls, "registered_set", Registrar.__registered_set)
 
     def __wrap_init(self, *args, **kwargs):
         yield
-        Extension._set(self, "_paths", {})
+        Extension._set(self, "_registered_paths", {})
+
+    def __registered_paths(self) -> Dict[str, Dict[str, Sequence[Any]]]:
+        """
+        Returns a copy of the current path registry
+        """
+
+        return StateMethods.try_copy(self._registered_paths)
 
     def __register(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """
@@ -35,7 +44,7 @@ class Registrar(Extension):
         """
 
         registered_path = {Keys.PATH_KEYS: path_keys, Keys.DEFAULTS: defaults}
-        self._paths[registered_path_label] = registered_path
+        self._registered_paths[registered_path_label] = registered_path
 
     def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
         """
@@ -44,7 +53,7 @@ class Registrar(Extension):
         the custom query args list and is expected to return a valid path key or KeyQuery
         """
 
-        registered_path = self._paths[registered_path_label]
+        registered_path = self._registered_paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.PATH_KEYS], custom_query_args
         )
@@ -67,7 +76,7 @@ class Registrar(Extension):
         the custom query args list and is expected to return a valid path key or KeyQuery
         """
 
-        registered_path = self._paths[registered_path_label]
+        registered_path = self._registered_paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.PATH_KEYS], custom_query_args
         )
