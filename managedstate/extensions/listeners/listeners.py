@@ -22,8 +22,8 @@ class Listeners(Extension):
         Extension._set(target_cls, "add_listener", Listeners.__add_listener)
         Extension._set(target_cls, "remove_listener", Listeners.__remove_listener)
 
-        Extension._wrap(target_cls, Keys.METHOD_GET, Listeners.__get_listeners_caller(Keys.METHOD_GET))
-        Extension._wrap(target_cls, Keys.METHOD_SET, Listeners.__get_listeners_caller(Keys.METHOD_SET))
+        Extension._wrap(target_cls, Keys.METHOD_GET, Listeners.__generate_listeners_caller(Keys.METHOD_GET))
+        Extension._wrap(target_cls, Keys.METHOD_SET, Listeners.__generate_listeners_caller(Keys.METHOD_SET))
 
     def __wrap_init(self, *args, **kwargs):
         yield
@@ -56,7 +56,7 @@ class Listeners(Extension):
             self._listeners[method].remove(listener)
 
     @staticmethod
-    def __get_listeners_caller(method: str) -> Callable[..., Generator[None, Any, None]]:
+    def __generate_listeners_caller(method: str) -> Callable[..., Generator[None, Any, None]]:
         """
         Used internally as a generic way to get listener handlers that can wrap each relevant method
         """
