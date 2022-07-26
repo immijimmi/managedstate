@@ -159,7 +159,7 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 *extensions*.Listeners.**add_listener**(*self, method: str, listener: Callable[[dict], None]*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Adds the provided listener to a set of callbacks for the specified method.  
 &nbsp;&nbsp;&nbsp;&nbsp;These callbacks will receive copies of the method return value and its arguments  
-&nbsp;&nbsp;&nbsp;&nbsp;in the form `(result, self, *args, **kwargs)`.  
+&nbsp;&nbsp;&nbsp;&nbsp;in the form `result, self, *args, **kwargs`.  
 &nbsp;
 
 *extensions*.Listeners.**remove_listener**(*self, method: str, listener: Callable[[dict], None]*)  
