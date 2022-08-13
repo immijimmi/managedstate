@@ -1,4 +1,6 @@
-from typing import Callable, Any, Tuple
+from typing import Callable, Any
+
+from .methods import Methods
 
 
 class KeyQuery:
@@ -13,7 +15,7 @@ class KeyQuery:
     __hash__ = None
     """
     As this class is used indirectly to determine the method of access for the state object,
-    it will never be used as a direct index. Thus, it should never be set as a key.
+    an instance of it will never be used itself as an index. Thus, it should never be stored as a key within your state.
     """
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
@@ -24,10 +26,10 @@ class KeyQuery:
         result = self.__function(substate)
         self.__history.append(result)
 
-        return self.__function(substate)
+        return Methods.try_copy(result)
 
     @property
-    def history(self) -> Tuple[Any]:
+    def history(self) -> tuple:
         return tuple(self.__history)
 
     def clear(self):
