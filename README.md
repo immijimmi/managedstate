@@ -61,7 +61,7 @@ True
 
 - A sub-state object, using a query function
 ```python
-def get_id_keyquery(target_id):  # This will dynamically create the query we need, when we need it
+def get_id_key_query(target_id):  # This will dynamically create the query we need, when we need it
     def id_query(substate):
         for index, obj in enumerate(substate):
             if obj["id"] == target_id:
@@ -69,7 +69,7 @@ def get_id_keyquery(target_id):  # This will dynamically create the query we nee
     return KeyQuery(id_query)
 ```
 ```python
->>> state.set(False, ['first_key', get_id_keyquery(3), 'second_key'], defaults=[[], {}])
+>>> state.set(False, ['first_key', get_id_key_query(3), 'second_key'], defaults=[[], {}])
 >>> state.get()
 {'first_key': [{'id': 3, 'second_key': False}, {'id': 4, 'second_key': False}]}
 ```
