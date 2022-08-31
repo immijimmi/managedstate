@@ -12,7 +12,7 @@ class State(Extendable):
     def __init__(self, initial_state: Any = None):
         super().__init__()
 
-        self.__state = Methods.try_copy(initial_state) or {}
+        self.__state = Methods.try_copy(initial_state) if initial_state is not None else {}
 
     def get(self, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> Any:
         """
