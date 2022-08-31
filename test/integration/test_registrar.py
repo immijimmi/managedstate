@@ -1,6 +1,7 @@
 import pytest
 
 from managedstate import State
+from managedstate import AttributeName
 from managedstate.extensions import Registrar
 from managedstate.extensions.registrar import Keys
 
@@ -134,3 +135,17 @@ class TestRegistrar:
         state.register_path("test_label_2", [0, "key", 0], [{}, [False], 3])
 
         assert pytest.raises(RuntimeError, state.get_shape)
+
+    def test_get_shape_correctly_handles_attributename_objects(self):
+        class ThrowawayClass:
+            def __eq__(self, other):
+                return issubclass(type(other), ThrowawayClass) and (self.value == other.value)
+
+            def __init__(self, value):
+                self.value = value
+
+        state = State.with_extensions(Registrar)()
+
+        state.register_path("test_label", ["throwaway", AttributeName("value")], [ThrowawayClass({}), {}])
+
+        assert state.get_shape() == {"throwaway": ThrowawayClass({})}
