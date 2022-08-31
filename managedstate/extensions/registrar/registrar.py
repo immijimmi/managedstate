@@ -1,6 +1,7 @@
 from objectextensions import Extension
 
 from typing import Sequence, List, Any, Dict
+from logging import warning
 
 from ...state import State
 from ...methods import Methods as StateMethods
@@ -23,6 +24,7 @@ class Registrar(Extension):
 
         Extension._set_property(target_cls, "registered_paths", Registrar.__registered_paths)
         Extension._set(target_cls, "register_path", Registrar.__register_path)
+        Extension._set(target_cls, "get_shape", Registrar.__get_shape)
         Extension._set(target_cls, "registered_get", Registrar.__registered_get)
         Extension._set(target_cls, "registered_set", Registrar.__registered_set)
 
@@ -45,6 +47,40 @@ class Registrar(Extension):
 
         registered_path = {Keys.PATH_KEYS: path_keys, Keys.DEFAULTS: defaults}
         self._registered_paths[registered_path_label] = registered_path
+
+    def __get_shape(self, initial_state: Any = None) -> Any:
+        """
+        Generates a default shape for the state, using the current registered paths.
+
+        Any registered paths containing PartialQuery objects are truncated for this purpose, as it is not possible
+        to determine what kind of value a PartialQuery object would provide to drill further into the state
+        """
+
+        working_state = State(initial_state)
+
+        for registered_path_label, path_data in self.registered_paths.values():
+            path_keys = path_data[Keys.PATH_KEYS]
+            defaults = path_data[Keys.DEFAULTS]
+
+            for path_key_index, path_key in enumerate(path_keys):
+                if issubclass(type(path_key), PartialQuery):
+                    path_keys = path_keys[:path_key_index]
+                    break
+
+            # A path key and its associated default are both needed to generate a default shape at each level of state
+            # Therefore, any additional (unpaired) path keys or defaults are truncated here
+            path_keys = path_keys[:len(defaults)]
+            defaults = defaults[:len(path_keys)]
+
+            try:
+                working_state.set(defaults[-1], path_keys, defaults[:-1])
+            except:
+                warning(
+                    "Unable to generate default state shape using the following registered path: "
+                    f"{registered_path_label}"
+                )
+
+        return working_state.get()
 
     def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
         """
