@@ -5,6 +5,7 @@ from logging import warning
 
 from ...state import State
 from ...methods import Methods as StateMethods
+from ...keyquery import KeyQuery
 from .constants import Keys
 from .partialquery import PartialQuery
 
@@ -57,21 +58,49 @@ class Registrar(Extension):
         """
 
         working_state = State(initial_state)
+        default_values_lookup = {}  # Used below to check for conflicts between registered paths
 
-        for registered_path_label, path_data in self.registered_paths.values():
+        for registered_path_label, path_data in self.registered_paths.items():
             path_keys = path_data[Keys.PATH_KEYS]
             defaults = path_data[Keys.DEFAULTS]
 
+            # Truncating the registered path to remove any PartialQuery objects
             for path_key_index, path_key in enumerate(path_keys):
                 if issubclass(type(path_key), PartialQuery):
                     path_keys = path_keys[:path_key_index]
                     break
 
             # A path key and its associated default are both needed to generate a default shape at each level of state
-            # Therefore, any additional (unpaired) path keys or defaults are truncated here
+            # Therefore, any additional (unpaired) path keys or defaults are truncated from their respective lists here
             path_keys = path_keys[:len(defaults)]
             defaults = defaults[:len(path_keys)]
 
+            # Checking that the defaults in this registered path do not conflict with those in other registered paths
+            for path_key_index, path_key in enumerate(path_keys):
+                # Resolving KeyQuery objects to facilitate hashing path_keys
+                if issubclass(type(path_key), KeyQuery):
+                    key_query_substate = working_state.get(path_keys[:path_key_index], defaults)
+                    path_key = path_key(key_query_substate)
+                    path_keys[path_key_index] = path_key
+
+                default_value = defaults[path_key_index]
+                default_value_path_keys = tuple(path_keys[:path_key_index+1])
+
+                if default_value_path_keys in default_values_lookup:
+                    existing_default_value = default_values_lookup[default_value_path_keys][1]
+
+                    if default_value != existing_default_value:
+                        conflicting_registered_path_label = default_values_lookup[default_value_path_keys][0]
+
+                        raise RuntimeError(
+                            "the following registered paths generate conflicting default shapes: "
+                            f"{conflicting_registered_path_label}, {registered_path_label}"
+                            f" ({existing_default_value} != {default_value})"
+                        )
+                else:
+                    default_values_lookup[default_value_path_keys] = (registered_path_label, default_value)
+
+            # Generating a default shape using the current registered path
             try:
                 working_state.set(defaults[-1], path_keys, defaults[:-1])
             except:
@@ -136,7 +165,7 @@ class Registrar(Extension):
         result = []
 
         for path_node in path_keys:
-            if type(path_node) is PartialQuery:
+            if issubclass(type(path_node), PartialQuery):
                 result.append(path_node(working_args.pop(0)))
             else:
                 result.append(path_node)

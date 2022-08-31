@@ -1,3 +1,5 @@
+import pytest
+
 from managedstate import State
 from managedstate.extensions import Registrar
 from managedstate.extensions.registrar import Keys
@@ -113,3 +115,22 @@ class TestRegistrar:
 
         assert len(registered_paths) == 0
         assert len(registered_paths_2) == 1
+
+    def test_get_shape_returns_correct_state_shape(self):
+        state = State.with_extensions(Registrar)()
+
+        state.register_path("test_label", [])
+
+        state.register_path("test_label_2", [0], [{}])
+        state.register_path("test_label_3", [0, "key", 0], [{}, [{}], 3])
+
+        state_shape = state.get_shape()
+        assert state_shape == {0: {"key": [3]}}
+
+    def test_get_shape_raises_error_with_conflicting_registered_paths(self):
+        state = State.with_extensions(Registrar)()
+
+        state.register_path("test_label", [0, "key", 0], [{}, [{}], 3])
+        state.register_path("test_label_2", [0, "key", 0], [{}, [False], 3])
+
+        assert pytest.raises(RuntimeError, state.get_shape)
