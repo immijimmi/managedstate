@@ -12,11 +12,9 @@ class KeyQuery:
     in order to determine what key to return
     """
 
+    # As this class is used indirectly to determine the method of access into the state,
+    # it should never be stored directly as a key within that state
     __hash__ = None
-    """
-    As this class is used indirectly to determine the method of access for the state object,
-    an instance of it will never be used itself as an index. Thus, it should never be stored as a key within your state.
-    """
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
         self.__function = path_key_getter

@@ -9,11 +9,9 @@ class PartialQuery:
     a valid path key or KeyQuery should be returned
     """
 
+    # As this class is used indirectly to determine the method of access into the state,
+    # it should never be stored directly as a key within that state
     __hash__ = None
-    """
-    As this class is used indirectly to determine the method of access for the state object,
-    it will never be used as a direct index. Thus, it should never be set as a key.
-    """
 
     def __init__(self, path_key_getter: Callable[[Any], Any]):
         self.__function = path_key_getter

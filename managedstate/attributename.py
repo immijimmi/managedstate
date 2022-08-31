@@ -4,11 +4,9 @@ class AttributeName:
     to indicate that the next nesting level of the state should be accessed via an object attribute
     """
 
+    # As this class is used indirectly to determine the method of access into the state,
+    # it should never be stored directly as a key within that state
     __hash__ = None
-    """
-    As this class is used indirectly to determine the method of access for the state object,
-    it will never be used as a direct index. Thus, it should never be set as a key.
-    """
 
     def __init__(self, attribute_name: str):
         self.__name = attribute_name
