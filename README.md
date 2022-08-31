@@ -105,6 +105,9 @@ state = State.with_extensions(Registrar)()
 **AttributeName**(*self, attribute_name: str*)  
 &nbsp;&nbsp;&nbsp;&nbsp;An instance of this class should be provided as a path key when getting or setting the state,  
 &nbsp;&nbsp;&nbsp;&nbsp;to indicate that the next nesting level of the state should be accessed via an object attribute.  
+
+*Note: As this class is used indirectly to determine the method of access into the state,*  
+&nbsp;&nbsp;&nbsp;&nbsp;*it should never be stored directly as a key within that state.*  
 &nbsp;
 
 **KeyQuery**(*self, path_key_getter: Callable[[Any], Any]*)  
@@ -120,6 +123,12 @@ state = State.with_extensions(Registrar)()
 &nbsp;&nbsp;&nbsp;&nbsp;When `registered_get()`/`registered_set()` is called with the relevant path label, the function provided below  
 &nbsp;&nbsp;&nbsp;&nbsp;will be called and passed one value from the custom query args list;  
 &nbsp;&nbsp;&nbsp;&nbsp;a valid path key or KeyQuery should be returned.  
+&nbsp;
+
+### Properties
+
+*extensions*.Registrar.**registered_paths**  
+&nbsp;&nbsp;&nbsp;&nbsp;Returns a copy of the current path registry.  
 &nbsp;
 
 ### Methods
@@ -142,6 +151,13 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 *extensions*.Registrar.**register_path**(*self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Saves the provided path keys and defaults under the provided label, so that a custom get or set can be  
 &nbsp;&nbsp;&nbsp;&nbsp;carried out at later times simply by providing the label again in a call to `registered_get()` or `registered_set()`.  
+&nbsp;
+
+*extensions*.Registrar.**get_shape**(*self, initial_state: Any = None*)  
+&nbsp;&nbsp;&nbsp;&nbsp;Generates a default shape for the state, using the current registered paths.  
+&nbsp;&nbsp;&nbsp;&nbsp;  
+&nbsp;&nbsp;&nbsp;&nbsp;Any registered paths containing PartialQuery objects are truncated for this purpose, as it is not possible  
+&nbsp;&nbsp;&nbsp;&nbsp;to determine what kind of value a PartialQuery object would provide to drill further into the state.  
 &nbsp;
 
 *extensions*.Registrar.**registered_get**(*self, registered_path_label: str, custom_query_args: Sequence[Any] = ()*)  
