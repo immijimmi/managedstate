@@ -22,7 +22,7 @@ setup(
         "state", "managed", "management", "access", "data"
     ],
     install_requires=[
-        "objectextensions~=1.2.0"
+        "objectextensions~=2.0.0"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
