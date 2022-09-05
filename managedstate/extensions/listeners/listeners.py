@@ -3,7 +3,8 @@ from objectextensions import Extension
 from typing import Callable, Generator, Any
 
 from ...state import State
-from .constants import Keys, ErrorMessages
+from .constants import Keys
+from .methods import ErrorMessages
 
 
 class Listeners(Extension):

@@ -4,8 +4,7 @@ from typing import Sequence, Any
 
 from .keyquery import KeyQuery
 from .attributename import AttributeName
-from .constants import ErrorMessages
-from .methods import Methods
+from .methods import Methods, ErrorMessages
 
 
 class State(Extendable):
