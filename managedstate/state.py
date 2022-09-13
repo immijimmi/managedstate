@@ -107,7 +107,7 @@ class State(Extendable):
                     working_state = getattr(working_state, path_key.name)
                 except AttributeError:  # No attribute found, use default value
                     try:
-                        working_state = defaults[path_index]
+                        working_state = Methods.try_copy(defaults[path_index])
                     except IndexError:
                         ErrorMessages.no_default(path_index)
             else:  # Assume path key is a container index if not an attribute name
@@ -115,7 +115,7 @@ class State(Extendable):
                     working_state = working_state[path_key]
                 except:  # Unable to work with path key at all, use default value
                     try:
-                        working_state = defaults[path_index]
+                        working_state = Methods.try_copy(defaults[path_index])
                     except IndexError:
                         ErrorMessages.no_default(path_index)
 

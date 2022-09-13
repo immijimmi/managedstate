@@ -13,6 +13,7 @@ def res():
         value_2 = {"key_1": [{}, {"key_2": 5}, {}]}
         value_3 = {"key_1": {"key_2": [], "key_3": {"key_4": 8}}}
         value_4 = {"key_1": {}, "key_2": DataClass(attribute_1={"key_3": 7})}
+        value_5 = {"key_1": [], "key_2": True}
 
     return StateResources
 

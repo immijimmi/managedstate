@@ -184,6 +184,6 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 
 ### Additional Info
 
-- KeyQuery instances provided as path keys can return any valid path key, *except* another KeyQuery or a PartialQuery.
+- KeyQuery instances provided as path keys can return any valid path key, *except* another KeyQuery or a PartialQuery
 - Similarly, PartialQuery instances can return any valid path key except for another PartialQuery (they can however return a KeyQuery)
-- The data classes provided in this package are not designed to be stored inside the state object themselves, and as such their `__hash__` methods have been removed.
+- The data classes provided in this package are not designed to be stored inside the state object themselves. Doing so may result in unintended behaviour

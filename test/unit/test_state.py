@@ -80,3 +80,21 @@ class TestState:
         state.set("value", ["key_1", 0, "key_2"], [[], []])
 
         assert state.get(["key_1", 0, "key_2"], [[], [], 0]) == "value"
+
+    def test_set_handles_full_list_assignment_correctly(self, res):
+        state = State(res.value_2)
+
+        state.set(True, ["key_1", 0], [[], None])
+
+        assert state.get() == {"key_1": [True, {"key_2": 5}, {}]}
+
+    def test_set_handles_empty_list_assignment_correctly(self, res):
+        state = State(res.value_5)
+
+        state.set(5, ["key_1", 1], [[], 0])
+
+        assert state.get() == {"key_1": [0, 5], "key_2": True}
+
+        state.set(True, ["key_1", 3, "test"], [[], {}])
+
+        assert state.get() == {"key_1": [0, 5, {}, {"test": True}], "key_2": True}
