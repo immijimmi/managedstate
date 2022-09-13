@@ -22,13 +22,10 @@ class KeyQuery:
 
     def __call__(self, substate: Any) -> Any:
         result = self.__function(substate)
-        self.__history.append(result)
+        self.__history.append(Methods.try_copy(result))
 
         return Methods.try_copy(result)
 
     @property
-    def history(self) -> tuple:
-        return tuple(self.__history)
-
-    def clear(self):
-        self.__history.clear()
+    def history(self) -> list:
+        return self.__history
