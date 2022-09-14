@@ -1,10 +1,9 @@
-from objectextensions import Extension
+from objectextensions import Extension, Methods
 
 from typing import Sequence, List, Any, Dict
 from logging import warning
 
 from ...state import State
-from ...methods import Methods as StateMethods
 from ...keyquery import KeyQuery
 from .constants import Keys
 from .partialquery import PartialQuery
@@ -38,7 +37,7 @@ class Registrar(Extension):
         Returns a copy of the current path registry
         """
 
-        return StateMethods.try_copy(self._registered_paths)
+        return Methods.try_copy(self._registered_paths)
 
     def __register_path(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
         """

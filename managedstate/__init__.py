@@ -1,4 +1,4 @@
 from .state import State
 from .keyquery import KeyQuery
 from .attributename import AttributeName
-from .methods import Methods, ErrorMessages
+from .methods import ErrorMessages

@@ -1,10 +1,10 @@
-from objectextensions import Extendable
+from objectextensions import Extendable, Methods
 
 from typing import Sequence, Any
 
 from .keyquery import KeyQuery
 from .attributename import AttributeName
-from .methods import Methods, ErrorMessages
+from .methods import ErrorMessages
 
 
 class State(Extendable):

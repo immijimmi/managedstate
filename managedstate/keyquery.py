@@ -1,6 +1,6 @@
-from typing import Callable, Any
+from objectextensions import Methods
 
-from .methods import Methods
+from typing import Callable, Any
 
 
 class KeyQuery:
