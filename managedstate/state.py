@@ -74,7 +74,7 @@ class State(Extendable):
                     try:  # Get the relevant default for `value`
                         nested_default = defaults[len(path_keys)]
                     except IndexError:
-                        ErrorMessages.no_default(set_key)
+                        ErrorMessages.no_default(len(path_keys))
 
                     try:
                         missing_indexes = set_key-len(working_state)
