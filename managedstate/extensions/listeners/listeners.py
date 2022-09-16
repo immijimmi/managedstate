@@ -33,31 +33,31 @@ class Listeners(Extension):
             Keys.METHOD_SET: set()
         })
 
-    def __add_listener(self, method: str, listener: Callable[[dict], None]) -> None:
+    def __add_listener(self, method_name: str, listener: Callable[[dict], None]) -> None:
         """
         Adds the provided listener to a set of callbacks for the specified method.
         These callbacks will receive copies of the method return value and its arguments
         in the form `result, self, *args, **kwargs`
         """
 
-        if method not in [Keys.METHOD_GET, Keys.METHOD_SET]:
-            ErrorMessages.invalid_method(method)
+        if method_name not in [Keys.METHOD_GET, Keys.METHOD_SET]:
+            ErrorMessages.invalid_method(method_name)
 
-        self._listeners[method].add(listener)
+        self._listeners[method_name].add(listener)
 
-    def __remove_listener(self, method: str, listener: Callable[[dict], None]) -> None:
+    def __remove_listener(self, method_name: str, listener: Callable[[dict], None]) -> None:
         """
         Removes the provided listener from the set of callbacks for the specified method
         """
 
-        if method not in [Keys.METHOD_GET, Keys.METHOD_SET]:
-            ErrorMessages.invalid_method(method)
+        if method_name not in [Keys.METHOD_GET, Keys.METHOD_SET]:
+            ErrorMessages.invalid_method(method_name)
 
-        if listener in self._listeners[method]:
-            self._listeners[method].remove(listener)
+        if listener in self._listeners[method_name]:
+            self._listeners[method_name].remove(listener)
 
     @staticmethod
-    def __generate_listeners_caller(method: str) -> Callable[..., Generator[None, Any, None]]:
+    def __generate_listeners_caller(method_name: str) -> Callable[..., Generator[None, Any, None]]:
         """
         Used internally as a generic way to get listener handlers that can wrap each relevant method
         """
@@ -65,7 +65,7 @@ class Listeners(Extension):
         def call_listeners(self, *args, **kwargs):
             result = yield
 
-            for listener in self._listeners[method]:
+            for listener in self._listeners[method_name]:
                 listener(result, self, *args, **kwargs)
 
         return call_listeners
