@@ -172,13 +172,13 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 &nbsp;&nbsp;&nbsp;&nbsp;the custom query args list and is expected to return a valid path key or KeyQuery.  
 &nbsp;
 
-*extensions*.Listeners.**add_listener**(*self, method: str, listener: Callable[[dict], None]*)  
+*extensions*.Listeners.**add_listener**(*self, method_name: str, listener: Callable[[dict], None]*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Adds the provided listener to a set of callbacks for the specified method.  
 &nbsp;&nbsp;&nbsp;&nbsp;These callbacks will receive copies of the method return value and its arguments  
 &nbsp;&nbsp;&nbsp;&nbsp;in the form `result, self, *args, **kwargs`.  
 &nbsp;
 
-*extensions*.Listeners.**remove_listener**(*self, method: str, listener: Callable[[dict], None]*)  
+*extensions*.Listeners.**remove_listener**(*self, method_name: str, listener: Callable[[dict], None]*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Removes the provided listener from the set of callbacks for the specified method.  
 &nbsp;
 
