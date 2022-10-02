@@ -133,14 +133,14 @@ state = State.with_extensions(Registrar)()
 
 ### Methods
 
-State.**get**(*self, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()*)  
+State.**get**(*self, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
 &nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
 &nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
 &nbsp;&nbsp;&nbsp;&nbsp;Returns a copy of the drilled-down state object.  
 &nbsp;
 
-State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()*)  
+State.**set**(*self, value: Any, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
 &nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
 &nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
@@ -148,7 +148,7 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 &nbsp;&nbsp;&nbsp;&nbsp;inside the drilled-down state object.  
 &nbsp;
 
-*extensions*.Registrar.**register_path**(*self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()*)  
+*extensions*.Registrar.**register_path**(*self, registered_path_label: str, path_keys: Iterable[Any], defaults: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Saves the provided path keys and defaults under the provided label, so that a custom get or set can be  
 &nbsp;&nbsp;&nbsp;&nbsp;carried out at later times simply by providing the label again in a call to `registered_get()` or `registered_set()`.  
 &nbsp;
@@ -160,13 +160,13 @@ State.**set**(*self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequen
 &nbsp;&nbsp;&nbsp;&nbsp;to determine what kind of value a PartialQuery object would provide to drill further into the state.  
 &nbsp;
 
-*extensions*.Registrar.**registered_get**(*self, registered_path_label: str, custom_query_args: Sequence[Any] = ()*)  
+*extensions*.Registrar.**registered_get**(*self, registered_path_label: str, custom_query_args: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Calls `get()`, passing in the path keys and defaults previously provided in `register()`.  
 &nbsp;&nbsp;&nbsp;&nbsp;If any of these path keys are instances of PartialQuery, each will be called and passed one value from  
 &nbsp;&nbsp;&nbsp;&nbsp;the custom query args list and is expected to return a valid path key or KeyQuery.  
 &nbsp;
 
-*extensions*.Registrar.**registered_set**(*self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()*)  
+*extensions*.Registrar.**registered_set**(*self, value: Any, registered_path_label: str, custom_query_args: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Calls `set()`, passing in the path keys and defaults previously provided in `register()`.  
 &nbsp;&nbsp;&nbsp;&nbsp;If any of these path keys are instances of PartialQuery, each will be called and passed one value from  
 &nbsp;&nbsp;&nbsp;&nbsp;the custom query args list and is expected to return a valid path key or KeyQuery.  

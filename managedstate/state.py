@@ -1,6 +1,6 @@
 from objectextensions import Extendable, Methods
 
-from typing import Sequence, Any
+from typing import Iterable, Any
 
 from .keyquery import KeyQuery
 from .attributename import AttributeName
@@ -13,7 +13,7 @@ class State(Extendable):
 
         self.__state = Methods.try_copy(initial_state) if initial_state is not None else {}
 
-    def get(self, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> Any:
+    def get(self, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()) -> Any:
         """
         Drills into the state object using the provided path keys in sequence.
         Any time progressing further into the state object fails, the default value at the relevant index of defaults
@@ -21,12 +21,12 @@ class State(Extendable):
         Returns a copy of the drilled-down state object
         """
 
-        path_keys = list(Methods.try_copy(path_keys))
-        defaults = list(Methods.try_copy(defaults))
+        path_keys = Methods.try_copy(list(path_keys))
+        defaults = Methods.try_copy(list(defaults))
 
         return Methods.try_copy(self.__get_nodes(path_keys, defaults)[-1])
 
-    def set(self, value: Any, path_keys: Sequence[Any] = (), defaults: Sequence[Any] = ()) -> None:
+    def set(self, value: Any, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()) -> None:
         """
         Drills into the state object using the provided path keys in sequence.
         Any time progressing further into the state object fails, the default value at the relevant index of defaults
@@ -36,8 +36,8 @@ class State(Extendable):
         """
 
         value = Methods.try_copy(value)
-        path_keys = list(Methods.try_copy(path_keys))
-        defaults = list(Methods.try_copy(defaults))
+        path_keys = Methods.try_copy(list(path_keys))
+        defaults = Methods.try_copy(list(defaults))
 
         nodes = self.__get_nodes(path_keys[:-1], defaults)
 

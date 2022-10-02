@@ -1,6 +1,6 @@
 from objectextensions import Extension, Methods
 
-from typing import Sequence, List, Any, Dict
+from typing import Iterable, List, Any, Dict
 from logging import warning
 
 from ...state import State
@@ -32,20 +32,24 @@ class Registrar(Extension):
         yield
         Extension._set(self, "_registered_paths", {})
 
-    def __registered_paths(self) -> Dict[str, Dict[str, Sequence[Any]]]:
+    def __registered_paths(self) -> Dict[str, Dict[str, List[Any]]]:
         """
         Returns a copy of the current path registry
         """
 
         return Methods.try_copy(self._registered_paths)
 
-    def __register_path(self, registered_path_label: str, path_keys: Sequence[Any], defaults: Sequence[Any] = ()) -> None:
+    def __register_path(self, registered_path_label: str, path_keys: Iterable[Any], defaults: Iterable[Any] = ()) -> None:
         """
         Saves the provided path keys and defaults under the provided label, so that a custom get or set can be
         carried out at later times simply by providing the label again in a call to registered_get() or registered_set()
         """
 
-        registered_path = {Keys.PATH_KEYS: path_keys, Keys.DEFAULTS: defaults}
+        registered_path = {
+            Keys.PATH_KEYS: Methods.try_copy(list(path_keys)),
+            Keys.DEFAULTS: Methods.try_copy(list(defaults))
+        }
+
         self._registered_paths[registered_path_label] = registered_path
 
     def __get_shape(self, initial_state: Any = None) -> Any:
@@ -110,14 +114,16 @@ class Registrar(Extension):
 
         return working_state.get()
 
-    def __registered_get(self, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> Any:
+    def __registered_get(self, registered_path_label: str, custom_query_args: Iterable[Any] = ()) -> Any:
         """
         Calls get(), passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of PartialQuery, each will be called and passed one value from
         the custom query args list and is expected to return a valid path key or KeyQuery
         """
 
-        registered_path = self._registered_paths[registered_path_label]
+        custom_query_args = Methods.try_copy(list(custom_query_args))
+        registered_path = Methods.try_copy(self._registered_paths[registered_path_label])
+
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.PATH_KEYS], custom_query_args
         )
@@ -133,14 +139,15 @@ class Registrar(Extension):
 
         return result
 
-    def __registered_set(self, value: Any, registered_path_label: str, custom_query_args: Sequence[Any] = ()) -> None:
+    def __registered_set(self, value: Any, registered_path_label: str, custom_query_args: Iterable[Any] = ()) -> None:
         """
         Calls set(), passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of PartialQuery, each will be called and passed one value from
         the custom query args list and is expected to return a valid path key or KeyQuery
         """
+        custom_query_args = Methods.try_copy(list(custom_query_args))
+        registered_path = Methods.try_copy(self._registered_paths[registered_path_label])
 
-        registered_path = self._registered_paths[registered_path_label]
         path_keys = Registrar.__process_registered_path_keys(
             registered_path[Keys.PATH_KEYS], custom_query_args
         )
@@ -155,17 +162,19 @@ class Registrar(Extension):
         del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
 
     @staticmethod
-    def __process_registered_path_keys(path_keys: Sequence[Any], custom_query_args: Sequence[Any]) -> List[Any]:
+    def __process_registered_path_keys(path_keys: Iterable[Any], custom_query_args: Iterable[Any]) -> List[Any]:
         """
         Used internally to coalesce instances of PartialQuery before path keys are passed to set()/get()
         """
 
-        working_args = list(custom_query_args)
+        path_keys = Methods.try_copy(list(path_keys))
+        custom_query_args = Methods.try_copy(list(custom_query_args))
+
         result = []
 
         for path_node in path_keys:
             if issubclass(type(path_node), PartialQuery):
-                result.append(path_node(working_args.pop(0)))
+                result.append(path_node(custom_query_args.pop(0)))
             else:
                 result.append(path_node)
 
