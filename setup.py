@@ -15,7 +15,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     author="immijimmi",
-    author_email="imranhamid99@msn.com",
+    author_email="immijimmi1@gmail.com",
     url="https://github.com/immijimmi/managedstate",
     download_url="https://github.com/immijimmi/managedstate/archive/refs/tags/v4.0.0.tar.gz",
     keywords=[
