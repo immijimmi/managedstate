@@ -16,9 +16,11 @@ class State(Extendable):
     def get(self, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()) -> Any:
         """
         Drills into the state object using the provided path keys in sequence.
-        Any time progressing further into the state object fails, the default value at the relevant index of defaults
-        is substituted in.
-        Returns a copy of the drilled-down state object
+        Any time progressing further into the state object fails, a copy of the default value at the relevant index
+        of defaults is substituted in.
+        Returns a copy of the drilled-down state object.
+
+        The `defaults` param may be provided any number of default values, and they will only be used as necessary
         """
 
         path_keys = Methods.try_copy(list(path_keys))
@@ -29,10 +31,12 @@ class State(Extendable):
     def set(self, value: Any, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()) -> None:
         """
         Drills into the state object using the provided path keys in sequence.
-        Any time progressing further into the state object fails, the default value at the relevant index of defaults
-        is substituted in.
+        Any time progressing further into the state object fails, a copy of the default value at the relevant index
+        of defaults is substituted in.
         The final path key is used as the index to store a copy of the provided value at
-        inside the drilled-down state object
+        inside the drilled-down state object.
+
+        The `defaults` param may be provided any number of default values, and they will only be used as necessary
         """
 
         value = Methods.try_copy(value)

@@ -135,17 +135,21 @@ state = State.with_extensions(Registrar)()
 
 State.**get**(*self, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
-&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
-&nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
+&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, a copy of the default value at the relevant index  
+&nbsp;&nbsp;&nbsp;&nbsp;of defaults is substituted in.  
 &nbsp;&nbsp;&nbsp;&nbsp;Returns a copy of the drilled-down state object.  
+&nbsp;&nbsp;&nbsp;&nbsp;  
+&nbsp;&nbsp;&nbsp;&nbsp;The `defaults` param may be provided any number of default values, and they will only be used as necessary.  
 &nbsp;
 
 State.**set**(*self, value: Any, path_keys: Iterable[Any] = (), defaults: Iterable[Any] = ()*)  
 &nbsp;&nbsp;&nbsp;&nbsp;Drills into the state object using the provided path keys in sequence.  
-&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, the default value at the relevant index of defaults  
-&nbsp;&nbsp;&nbsp;&nbsp;is substituted in.  
+&nbsp;&nbsp;&nbsp;&nbsp;Any time progressing further into the state object fails, a copy of the default value at the relevant index  
+&nbsp;&nbsp;&nbsp;&nbsp;of defaults is substituted in.  
 &nbsp;&nbsp;&nbsp;&nbsp;The final path key is used as the index to store a copy of the provided value at  
 &nbsp;&nbsp;&nbsp;&nbsp;inside the drilled-down state object.  
+&nbsp;&nbsp;&nbsp;&nbsp;  
+&nbsp;&nbsp;&nbsp;&nbsp;The `defaults` param may be provided any number of default values, and they will only be used as necessary.  
 &nbsp;
 
 *extensions*.Registrar.**register_path**(*self, registered_path_label: str, path_keys: Iterable[Any], defaults: Iterable[Any] = ()*)  
