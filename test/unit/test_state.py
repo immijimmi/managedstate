@@ -98,3 +98,24 @@ class TestState:
         state.set(True, ["key_1", 3, "test"], [[], {}])
 
         assert state.get() == {"key_1": [0, 5, {}, {"test": True}], "key_2": True}
+
+    def test_set_handles_empty_list_assignment_without_default_correctly(self):
+        state = State()
+
+        # Should not be able to set the value without a corresponding default if defaults need appending
+        assert pytest.raises(ValueError, state.set, "value", ["key_1", 1], [[]])
+
+        # Should not be able to set the value without a corresponding default even if no defaults need appending
+        assert pytest.raises(ValueError, state.set, "value", ["key_1", 0], [[]])
+        assert pytest.raises(ValueError, state.set, "value", ["key_1", 1], [["other_value"]])
+
+    def test_state_remains_unchanged_after_unsuccessful_set(self):
+        state = State()
+
+        try:
+            state.set("value", ["key_1", 0], [[]])
+        except:
+            pass
+
+        # State value should remain unchanged after unsuccessful attempts to set a value
+        assert state.get() == {}

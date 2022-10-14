@@ -78,6 +78,15 @@ class State(Extendable):
                     try:  # Get the relevant default for `value`
                         nested_default = defaults[len(path_keys)]
                     except IndexError:
+                        """
+                        If a default value was not provided for indexing at this level of the state,
+                        then failure to set via the provided index should be treated the same way
+                        as failure to get via this index would be treated - it should raise an error.
+
+                        For consistency, this should result in an error being raised even if no default values
+                        would need adding in order to append the set value at the correct index
+                        """
+
                         ErrorMessages.no_default(len(path_keys))
 
                     try:
