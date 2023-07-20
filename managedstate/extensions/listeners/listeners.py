@@ -9,7 +9,8 @@ from .methods import ErrorMessages
 
 class Listeners(Extension):
     """
-    Provides an easy way to attach observer methods that will be called immediately after set() and/or get()
+    Provides an easy way to attach observer functions to be called immediately after
+    the relevant State methods are invoked
     """
 
     @staticmethod
@@ -37,7 +38,7 @@ class Listeners(Extension):
         """
         Adds the provided listener to a set of callbacks for the specified method.
         These callbacks will receive copies of the method return value and its arguments
-        in the form `result, self, *args, **kwargs`
+        in the form `<method return value>, <state object>, *<method args>, **<method kwargs>`
         """
 
         if method_name not in [Keys.METHOD_GET, Keys.METHOD_SET]:
