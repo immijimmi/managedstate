@@ -80,11 +80,17 @@ class Registrar(Extension):
 
             # Checking that the defaults in this registered path do not conflict with those in other registered paths
             for path_key_index, path_key in enumerate(path_keys):
-                # Resolving KeyQuery objects to facilitate hashing path_keys
+                # Resolve any KeyQuery objects to facilitate hashing path_keys
                 if issubclass(type(path_key), KeyQuery):
-                    key_query_substate = working_state.get(path_keys[:path_key_index], defaults)
-                    path_key = path_key(key_query_substate)
-                    path_keys[path_key_index] = path_key
+                    try:
+                        key_query_substate = working_state.get(path_keys[:path_key_index], defaults)
+                        path_key = path_key(key_query_substate)
+                        path_keys[path_key_index] = path_key
+
+                    except:  # Exception raised during KeyQuery execution, truncate the registered path to remove it
+                        path_keys = path_keys[:path_key_index]
+                        defaults = defaults[:len(path_keys)]
+                        break
 
                 default_value = defaults[path_key_index]
                 default_value_path_keys = tuple(path_keys[:path_key_index+1])
@@ -116,9 +122,9 @@ class Registrar(Extension):
 
     def __registered_get(self, registered_path_label: str, custom_query_args: Iterable[Any] = ()) -> Any:
         """
-        Calls get(), passing in the path keys and defaults previously provided in register().
+        Calls `.get()`, passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of PartialQuery, each will be called and passed one value from
-        the custom query args list and is expected to return a valid path key or KeyQuery
+        the custom query args list and is expected to return a valid path key or KeyQuery instance
         """
 
         custom_query_args = Methods.try_copy(list(custom_query_args))
@@ -141,9 +147,9 @@ class Registrar(Extension):
 
     def __registered_set(self, value: Any, registered_path_label: str, custom_query_args: Iterable[Any] = ()) -> None:
         """
-        Calls set(), passing in the path keys and defaults previously provided in register().
+        Calls `.set()`, passing in the path keys and defaults previously provided in register().
         If any of these path keys are instances of PartialQuery, each will be called and passed one value from
-        the custom query args list and is expected to return a valid path key or KeyQuery
+        the custom query args list and is expected to return a valid path key or KeyQuery instance
         """
         custom_query_args = Methods.try_copy(list(custom_query_args))
         registered_path = Methods.try_copy(self._registered_paths[registered_path_label])

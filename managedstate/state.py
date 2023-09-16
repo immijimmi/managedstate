@@ -66,7 +66,7 @@ class State(Extendable):
                 except IndexError as ex:
                     """
                     In a `set` operation (as opposed to a `get` operation), simply substituting in the relevant default
-                    for working_state when it cannot be modified will not work;
+                    for working_state when the path key fails will not work;
                     this would erase any modifications that were made further into the working_state object
                     before reaching the current iteration.
 
@@ -113,11 +113,22 @@ class State(Extendable):
 
         for path_index, path_key in enumerate(path_keys):
             if issubclass(type(path_key), KeyQuery):  # Resolve any KeyQuery instances first
-                path_key = path_key(Methods.try_copy(working_state))
+                try:
+                    path_key = path_key(Methods.try_copy(working_state))
+
+                except:  # Exception raised during KeyQuery execution, use default value
+                    try:
+                        working_state = Methods.try_copy(defaults[path_index])
+
+                        nodes.append(working_state)
+                        continue
+                    except IndexError:
+                        ErrorMessages.no_default(path_index)
 
             if issubclass(type(path_key), AttributeName):  # Work with any AttributeName instances
                 try:
                     working_state = getattr(working_state, path_key.name)
+
                 except AttributeError:  # No attribute found, use default value
                     try:
                         working_state = Methods.try_copy(defaults[path_index])
@@ -126,6 +137,7 @@ class State(Extendable):
             else:  # Assume path key is a container index if not an attribute name
                 try:
                     working_state = working_state[path_key]
+
                 except:  # Unable to work with path key at all, use default value
                     try:
                         working_state = Methods.try_copy(defaults[path_index])
