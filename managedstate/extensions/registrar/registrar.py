@@ -135,13 +135,24 @@ class Registrar(Extension):
         )
         defaults = registered_path[Keys.DEFAULTS]
 
+        if is_overwriting_path_label := (Keys.REGISTERED_PATH_LABEL in self._extension_data):
+            previous_path_label = self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        if is_overwriting_query_args := (Keys.CUSTOM_QUERY_ARGS in self._extension_data):
+            previous_query_args = self._extension_data[Keys.CUSTOM_QUERY_ARGS]
+
         self._extension_data[Keys.REGISTERED_PATH_LABEL] = registered_path_label
         self._extension_data[Keys.CUSTOM_QUERY_ARGS] = custom_query_args
 
         result = self.get(path_keys, defaults)
 
-        del self._extension_data[Keys.REGISTERED_PATH_LABEL]
-        del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
+        if is_overwriting_path_label:
+            self._extension_data[Keys.REGISTERED_PATH_LABEL] = previous_path_label
+        else:
+            del self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        if is_overwriting_query_args:
+            self._extension_data[Keys.CUSTOM_QUERY_ARGS] = previous_query_args
+        else:
+            del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
 
         return result
 
@@ -159,13 +170,24 @@ class Registrar(Extension):
         )
         defaults = registered_path[Keys.DEFAULTS]
 
+        if is_overwriting_path_label := (Keys.REGISTERED_PATH_LABEL in self._extension_data):
+            previous_path_label = self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        if is_overwriting_query_args := (Keys.CUSTOM_QUERY_ARGS in self._extension_data):
+            previous_query_args = self._extension_data[Keys.CUSTOM_QUERY_ARGS]
+
         self._extension_data[Keys.REGISTERED_PATH_LABEL] = registered_path_label
         self._extension_data[Keys.CUSTOM_QUERY_ARGS] = custom_query_args
 
         result = self.set(value, path_keys, defaults)
 
-        del self._extension_data[Keys.REGISTERED_PATH_LABEL]
-        del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
+        if is_overwriting_path_label:
+            self._extension_data[Keys.REGISTERED_PATH_LABEL] = previous_path_label
+        else:
+            del self._extension_data[Keys.REGISTERED_PATH_LABEL]
+        if is_overwriting_query_args:
+            self._extension_data[Keys.CUSTOM_QUERY_ARGS] = previous_query_args
+        else:
+            del self._extension_data[Keys.CUSTOM_QUERY_ARGS]
 
     @staticmethod
     def __process_registered_path_keys(path_keys: Iterable[Any], custom_query_args: Iterable[Any]) -> List[Any]:
