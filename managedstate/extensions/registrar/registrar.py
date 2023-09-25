@@ -5,6 +5,7 @@ from logging import warning
 
 from ...state import State
 from ...keyquery import KeyQuery
+from ...constants import NO_DEFAULT
 from .constants import Keys
 from .partialquery import PartialQuery
 
@@ -56,8 +57,9 @@ class Registrar(Extension):
         """
         Generates a default shape for the state, using the current registered paths.
 
-        Any registered paths containing PartialQuery objects are truncated for this purpose, as it is not possible
-        to determine what kind of value a PartialQuery object would provide to drill further into the state
+        Any registered paths containing PartialQuery objects or `NO_DEFAULT` are truncated to the first index
+        containing one of those values for this purpose, as it is not possible
+        to generate a default shape from these objects without additional information
         """
 
         working_state = State(initial_state)
@@ -67,9 +69,18 @@ class Registrar(Extension):
             path_keys = path_data[Keys.PATH_KEYS]
             defaults = path_data[Keys.DEFAULTS]
 
-            # Truncating the registered path to remove any PartialQuery objects
+            # Truncating the registered path to remove any PartialQuery objects or `NO_DEFAULT`s
             for path_key_index, path_key in enumerate(path_keys):
                 if issubclass(type(path_key), PartialQuery):
+                    path_keys = path_keys[:path_key_index]
+                    break
+
+                try:
+                    default = defaults[path_key_index]
+                except IndexError:
+                    continue
+
+                if default is NO_DEFAULT:
                     path_keys = path_keys[:path_key_index]
                     break
 

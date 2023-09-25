@@ -5,6 +5,7 @@ from typing import Iterable, Any
 from .keyquery import KeyQuery
 from .attributename import AttributeName
 from .methods import ErrorMessages
+from .constants import NO_DEFAULT
 
 
 class State(Extendable):
@@ -77,6 +78,8 @@ class State(Extendable):
 
                     try:  # Get the relevant default for `value`
                         nested_default = defaults[len(path_keys)]
+                        if nested_default is NO_DEFAULT:
+                            ErrorMessages.no_default(len(path_keys))
                     except IndexError:
                         """
                         If a default value was not provided for indexing at this level of the state,
@@ -118,12 +121,15 @@ class State(Extendable):
 
                 except:  # Exception raised during KeyQuery execution, use default value
                     try:
-                        working_state = Methods.try_copy(defaults[path_index])
-
-                        nodes.append(working_state)
-                        continue
+                        default = defaults[path_index]
+                        if default is NO_DEFAULT:
+                            ErrorMessages.no_default(path_index)
                     except IndexError:
                         ErrorMessages.no_default(path_index)
+
+                    working_state = Methods.try_copy(default)
+                    nodes.append(working_state)
+                    continue
 
             if issubclass(type(path_key), AttributeName):  # Work with any AttributeName instances
                 try:
@@ -131,18 +137,26 @@ class State(Extendable):
 
                 except AttributeError:  # No attribute found, use default value
                     try:
-                        working_state = Methods.try_copy(defaults[path_index])
+                        default = defaults[path_index]
+                        if default is NO_DEFAULT:
+                            ErrorMessages.no_default(path_index)
                     except IndexError:
                         ErrorMessages.no_default(path_index)
+
+                    working_state = Methods.try_copy(default)
             else:  # Assume path key is a container index if not an attribute name
                 try:
                     working_state = working_state[path_key]
 
                 except:  # Unable to work with path key at all, use default value
                     try:
-                        working_state = Methods.try_copy(defaults[path_index])
+                        default = defaults[path_index]
+                        if default is NO_DEFAULT:
+                            ErrorMessages.no_default(path_index)
                     except IndexError:
                         ErrorMessages.no_default(path_index)
+
+                    working_state = Methods.try_copy(default)
 
             nodes.append(working_state)
 

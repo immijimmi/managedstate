@@ -1,6 +1,6 @@
 import pytest
 
-from managedstate import State
+from managedstate import State, NO_DEFAULT
 
 
 class TestState:
@@ -119,3 +119,17 @@ class TestState:
 
         # State value should remain unchanged after unsuccessful attempts to set a value
         assert state.get() == {}
+
+    def test_no_default_sentinel(self):
+        state = State()
+
+        assert pytest.raises(ValueError, state.get, ["key_1", "key_2"], [NO_DEFAULT, 2])
+
+        state.set({}, ["key_1"])
+        assert state.get(["key_1", "key_2"], [NO_DEFAULT, 2]) == 2
+
+        assert pytest.raises(ValueError, state.set, 4, ["key_3", "key_4"], [NO_DEFAULT])
+
+        state.set({}, ["key_3"])
+        state.set(4, ["key_3", "key_4"], [NO_DEFAULT])
+        assert state.get(["key_3", "key_4"]) == 4
